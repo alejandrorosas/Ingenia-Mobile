@@ -12,10 +12,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothState;
+
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
+    BluetoothSPP bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        bt = new BluetoothSPP(this);
+        if(!bt.isBluetoothEnabled()) {
+            // Do somthing if bluetooth is disable
+        } else {
+            bt.startService(BluetoothState.DEVICE_OTHER);
+            bt.autoConnect("NEPTUNE");
+        }
+
+        bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+            public void onDeviceConnected(String name, String address) {
+                // Do something when successfully connected
+            }
+
+            public void onDeviceDisconnected() {
+                // Do something when connection was disconnected
+            }
+
+            public void onDeviceConnectionFailed() {
+                // Do something when connection failed
+            }
+        });
+
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            public void onDataReceived(byte[] data, String message) {
+                // Do something when data incoming
+            }
+        });
     }
 
 
